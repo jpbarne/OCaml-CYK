@@ -1,0 +1,5 @@
+let sample_table4 = [ [["11"];["21"];["31"];["41"]]; [["12"];["22"];["32"]]; [["13"];["23"]]; [["14"]] ];;
+
+let get_table_values_cell = function
+   | ([i; j], table) -> List.nth (List.nth table (j-1)) (i-1) 
+   | (_, _) -> [];;
