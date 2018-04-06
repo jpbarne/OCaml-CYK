@@ -1,5 +1,76 @@
 let sample_table4 = [ [["11"];["21"];["31"];["41"]]; [["12"];["22"];["32"]]; [["13"];["23"]]; [["14"]] ];;
 
+(** Prototype: get_table_values_cell([i;j],table)
+Input(s): tuple of ([<column>;<row>], table)
+Returned Value: cell with string values
+Side Effects: none
+Signature: val get_table_values_cell : int list * ’a list list -> ’a = <fun>
+*) 
+
 let get_table_values_cell = function
    | ([i; j], table) -> List.nth (List.nth table (j-1)) (i-1) 
    | (_, _) -> [];;
+   
+   
+(**
+Prototype: cell_products [cell1;cell2]
+Input(s): list containing 2 cells
+Returned Value: resultant list of strings
+Side Effects: none
+Signature: val cell_products : string list list -> string list = <fun>
+*)
+
+(*let rec one_product = function
+  | (i, strings) -> ( i ^ (List.hd strings) ) :: ( one_product (i, (List.tl strings)) )
+  | (_, []) -> [];;*)
+
+(*let rec one_product (i, cells) =
+  if cells == [] then []
+  else ( String.concat i (List.hd cells) ) :: ( one_product (i, (List.tl cells)) );;*)
+
+(*let rec cell_products ([cell1;cell2]) =
+  if cell1 == [] then [[]]
+  else one_product ((List.hd cell1), cell2) :: cell_products ([(List.tl cell1); cell2])*)
+   
+(**
+Prototype: form_row1_cell(element,productions)
+Input(s): tuple of single terminal element, productions list
+Returned Value: corresponding cell in first row of CYK table
+Side Effects: none
+Signature: val form_row1_cell : ’a * ’a list list -> ’a list = <fun>
+Notes: Forms row 1 cells of CYK table as a special case.
+*)
+   
+(**
+Prototype: equiv(ca, cb)
+Inputs: tuple of 2 cells
+Returned Value: true or false
+Side Effects: none
+Signature: val equiv : ’a list * ’a list -> bool = <fun>
+*)
+let rec member = function 
+  | (elem, []) -> false
+  | (elem, lst)-> if elem == (List.hd lst) then true
+                  else member (elem, (List.tl lst));;
+
+let rec shared = function 
+  | ([], []) -> true
+  | ([], _) -> true
+  | (a, b) -> member (List.hd a, b) && shared ((List.tl a), b);;
+
+let rec equiv (ca, cb) = 
+  (List.length ca == List.length cb) && (shared (ca, cb)) && (shared (cb, ca));;
+  
+(**
+Prototype: row_equivalent(rowA,rowB)
+Inputs: tuple of 2 rows
+Returned Value: true or false
+Side Effects: none
+Signature: val row_equivalent : ’a list list * ’a list list -> bool = <fun>
+*)
+let rec row_equivalent = function 
+  | ([], []) -> true
+  | (rowA, rowB) ->  (List.length rowA == List.length rowB) && 
+                     (equiv (List.hd rowA, List.hd rowB)) && 
+                     (row_equivalent (List.tl rowA, List.tl rowB));;
+  
