@@ -1,5 +1,3 @@
-let sample_table4 = [ [["11"];["21"];["31"];["41"]]; [["12"];["22"];["32"]]; [["13"];["23"]]; [["14"]] ];;
-
 (** Prototype: get_table_values_cell([i;j],table)
 Input(s): tuple of ([<column>;<row>], table)
 Returned Value: cell with string values
@@ -20,18 +18,20 @@ Side Effects: none
 Signature: val cell_products : string list list -> string list = <fun>
 *)
 
-(*let rec one_product = function
-  | (i, strings) -> ( i ^ (List.hd strings) ) :: ( one_product (i, (List.tl strings)) )
-  | (_, []) -> [];;*)
+let rec one_product = function
+  | (_, []) -> []
+  | (i, strings) -> 
+    List.append ((i ^ (List.hd strings))::[]) 
+                (one_product (i, (List.tl strings)));;
 
-(*let rec one_product (i, cells) =
-  if cells == [] then []
-  else ( String.concat i (List.hd cells) ) :: ( one_product (i, (List.tl cells)) );;*)
+let rec cell_products = function
+  | [_; []]    -> []
+  | [[]; _]    -> []
+  | [cell1;cell2] -> List.append (one_product ((List.hd cell1), cell2)) 
+                     (cell_products ([(List.tl cell1); cell2]))
+  | _ -> [];; 
 
-(*let rec cell_products ([cell1;cell2]) =
-  if cell1 == [] then [[]]
-  else one_product ((List.hd cell1), cell2) :: cell_products ([(List.tl cell1); cell2])*)
-   
+     
 (**
 Prototype: form_row1_cell(element,productions)
 Input(s): tuple of single terminal element, productions list
