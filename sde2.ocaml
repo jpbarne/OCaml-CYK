@@ -40,6 +40,18 @@ Side Effects: none
 Signature: val form_row1_cell : ’a * ’a list list -> ’a list = <fun>
 Notes: Forms row 1 cells of CYK table as a special case.
 *)
+let rec member = function 
+  | (elem, []) -> false
+  | (elem, lst)-> if elem = (List.hd lst) then true
+                  else member (elem, (List.tl lst));;
+
+let rec form_row1_cell = function
+  | (_, []) -> []
+  | (element, productions) -> 
+    if (member(element, List.hd productions)) then 
+      ( List.append ((List.hd (List.hd productions))::[]) 
+        (form_row1_cell (element, List.tl productions)) )
+    else form_row1_cell(element, List.tl productions);;  
    
 (**
 Prototype: equiv(ca, cb)
@@ -48,11 +60,6 @@ Returned Value: true or false
 Side Effects: none
 Signature: val equiv : ’a list * ’a list -> bool = <fun>
 *)
-let rec member = function 
-  | (elem, []) -> false
-  | (elem, lst)-> if elem == (List.hd lst) then true
-                  else member (elem, (List.tl lst));;
-
 let rec shared = function 
   | ([], []) -> true
   | ([], _) -> true
@@ -74,3 +81,52 @@ let rec row_equivalent = function
                      (equiv (List.hd rowA, List.hd rowB)) && 
                      (row_equivalent (List.tl rowA, List.tl rowB));;
   
+(**
+Prototype: table_equivalent(tableA,tableB)
+Inputs: tuple of 2 tables
+Returned Value: true or false
+Side Effects: none
+Signature: val table_equivalent :
+’a list list list * ’a list list list -> bool = <fun>
+Notes:
+*)
+let rec table_equivalent = function
+  | ([], []) -> true
+  | (tableA, tableB) -> (List.length tableA == List.length tableB) &&
+                        (row_equivalent (List.hd tableA, List.hd tableB)) &&
+                        (table_equivalent (List.tl tableA, List.tl tableB));;  
+
+(**
+Prototype: valid_production production
+Inputs: a list
+Returned Value: true or false
+Side Effects: none
+Signature: val valid_production : string list -> bool = <fun>
+Notes: true if production is valid format and CNF
+*)
+let rec capitalized (str, index) =
+  if String.length str = index then true
+  else ( ( (Char.code (String.get str index)) >= (Char.code 'A') ) &&
+         ( (Char.code (String.get str index)) <= (Char.code 'Z') ) &&
+         ( capitalized (str, index+1) ) );;
+
+let valid_production production = 
+  ( ((List.nth production 0) = "S") && 
+     capitalized((List.nth production 1), 0) && 
+     String.length (List.nth production 1) > 1) ||
+  ( capitalized((List.nth production 0), 0) && 
+     not(capitalized((List.nth production 1), 0)) );;
+     
+(**
+Prototype: valid_production_list productionList
+Inputs: list of productions
+Returned Value: true or false
+Side Effects: none
+Signature: val valid_production_list : string list list -> bool = <fun>
+Notes:
+*)
+let rec valid_production_list = function
+  | [] -> true
+  | productionList -> ( valid_production (List.hd productionList) &&
+                        valid_production_list (List.tl productionList) );;
+ 
