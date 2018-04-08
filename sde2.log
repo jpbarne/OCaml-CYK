@@ -1,0 +1,81 @@
+1) (* get_table_values_cell ([i;j], table) *)
+
+  # let table_ex = [[["11"];["21"];["31"];["41"]];
+                 [["12"];["22"];["32"]];
+                 [["13"];["23"]];
+                 [["14"]]];;
+                 
+  # get_table_values_cell ([1;1], table_ex);;
+  - : string list = ["11"]
+  # get_table_values_cell ([2;3], table_ex);;
+  - : string list = ["23"]
+  
+2) (* cell_products [cell1;cell2] *)  
+
+  # cell_products [["A"];["B";"C";"D"]] ;;
+  - : string list = ["AB"; "AC"; "AD"]
+  # cell_products [["A";"B";"C"];["D";"E";"F"]] ;;
+  - : string list = ["AD"; "AE"; "AF"; "BD"; "BE"; "BF"; "CD"; "CE"; "CF"]
+
+3) (* form_row1_cell(element,productions) *)
+
+  # let productions = 
+      [["S"; "AB"]; ["A"; "a"]; ["B"; "b"]; ["C"; "b"]; ["D"; "a"]];;
+  val productions : string list list =
+    [["S"; "AB"]; ["A"; "a"]; ["B"; "b"]; ["C"; "b"]; ["D"; "a"]];;
+  # form_row1_cell ("a", productions);;
+  - : string list = ["A"; "D"]
+  # form_row1_cell ("c", productions);;
+  - : string list = []
+  
+4) (* equiv(ca, cb) *)
+
+  # equiv(["A";"F";"C";"D"],["F";"C";"D"]);;
+  - : bool = false
+  # equiv(["B";"C";"A"],["A";"B";"C"]);;
+  - : bool = true
+  
+5) (* row_equivalent(rowA,rowB) *)
+
+  # let row1 = [["A"]; ["A"]; ["B"; "C"]; ["C"; "D"]];;
+  val row1 : string list list = [["A"]; ["A"]; ["B"; "C"]; ["C"; "D"]]
+  # let row2 = [["A"]; ["A"]; ["B"; "C"]; ["D"; "C"]];; 
+  val row2 : string list list = [["A"]; ["A"]; ["B"; "C"]; ["D"; "C"]]
+  # let row3 = [["A"]; ["A"]; ["C"; "D"]; ["B"; "C"]];;
+  val row3 : string list list = [["A"]; ["A"]; ["C"; "D"]; ["B"; "C"]]
+  # row_equivalent(row1, row2);;
+  - : bool = true
+  # row_equivalent(row1, row3);;
+  - : bool = false
+  
+6) (* table_equivalent(tableA,tableB) *) 
+
+  # let table1 = [ [["A"]]; [["B"];["C"]]; [["D"];["E"];["F";"G"]] ];; 
+  val table1 : string list list list =
+    [[["A"]]; [["B"]; ["C"]]; [["D"]; ["E"]; ["F";"G"]]]
+  # let table2 = [ [["A"]]; [["B"];["C"]]; [["D"];["E"];["G";"F"]] ];;
+  val table2 : string list list list =
+    [[["A"]]; [["B"]; ["C"]]; [["D"]; ["E"]; ["G"; "F"]]]
+  # let table3 = [[["A"]]; [["B"]; ["C"]]; [["D"]; ["E"]; ["H"; "F"]]];;
+  val table3 : string list list list =
+    [[["A"]]; [["B"]; ["C"]]; [["D"]; ["E"]; ["H"; "F"]]]
+  # table_equivalent(table1, table2);;  
+  - : bool = true  
+  # table_equivalent(table1, table3);;
+  - : bool = false  
+  
+7) (* valid_production production *)
+
+  # valid_production ["S"; "aB"];;
+  - : bool = false
+  # valid_production ["A"; "b"];;
+  - : bool = true
+
+8) (* valid_production_list productionList *)
+
+  # valid_production_list [ ["S";"AB"];["A";"b"];["B";"c"] ];;
+  - : bool = true
+  # valid_production_list [ ["s"; "AB"]; ["A"; "b"] ];;
+  - : bool = false
+  
+  

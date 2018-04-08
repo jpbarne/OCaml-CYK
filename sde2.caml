@@ -114,15 +114,10 @@ let valid_production production =
   if ((List.nth production 0) = "S") then 
      (capitalized((List.nth production 1), 0) && 
       String.length (List.nth production 1) > 1)
-  else (capitalized((List.nth production 0), 0) && 
-        not(capitalized((List.nth production 1), 0)) );;
-(*
-  ( ((List.nth production 0) = "S") && 
-     capitalized((List.nth production 1), 0) && 
-     String.length (List.nth production 1) > 1) ||
-  ( capitalized((List.nth production 0), 0) && 
-     not(capitalized((List.nth production 1), 0)) );;
-*)     
+  else ((capitalized((List.nth production 0), 0)) && 
+        (String.length(List.nth production 0) = 1) &&
+        (not(capitalized((List.nth production 1), 0))) );;
+     
 (**
 Prototype: valid_production_list productionList
 Inputs: list of productions
